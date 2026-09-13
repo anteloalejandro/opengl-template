@@ -1,2 +1,2 @@
 CompileFlags:
-  Add: [-I./deps/freeglut/include/, -I./deps/glew/include/]
+  CompilationDatabase: "build"

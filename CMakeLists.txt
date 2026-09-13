@@ -3,6 +3,17 @@ set(PROJECT_NAME main)
 # project(<project_name> <language>)
 project(${PROJECT_NAME} C)
 
+# Create a `compile_commands.json` the LSP can read
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# Link it from the build directory of the target to build/ directly
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+  file(CREATE_LINK
+    "${CMAKE_BINARY_DIR}/compile_commands.json"
+    "${CMAKE_SOURCE_DIR}/build/compile_commands.json"
+    SYMBOLIC
+  )
+endif()
+
 add_executable(${PROJECT_NAME}
     src/main.c
 )
