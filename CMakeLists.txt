@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 # project(<project_name> <language>)
 project(main C)
 
@@ -19,6 +19,7 @@ target_include_directories(main PRIVATE
 target_link_libraries(main PRIVATE
     # got the name from add_library inside freeglut/CMakeLists.txt
     freeglut_static
+    glew_s
 )
 
 # Set output directory for the final executable
@@ -39,5 +40,20 @@ if(TARGET freeglut_static)
     set_target_properties(freeglut_static PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY "${PREBUILT_LIB_DIR}"
         OUTPUT_NAME "freeglut"
+    )
+endif()
+
+# ====== GLEW CONFIG ======
+
+add_subdirectory(
+    #  ↓ Root directory containing CMakeLists (or whatever -S is set to)
+    "${CMAKE_SOURCE_DIR}/deps/glew/build/cmake"
+    #  ↓ CWD (or whatever -B is set to)
+    "${CMAKE_BINARY_DIR}/deps/glew"
+)
+if(TARGET glew_s)
+    set_target_properties(glew_s PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${PREBUILT_LIB_DIR}"
+        OUTPUT_NAME "glew"
     )
 endif()
