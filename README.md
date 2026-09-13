@@ -17,7 +17,8 @@ Esta plantilla está preparada para descargar y enlazar **estáticamente** las s
   - Según la distribución de Linux, se puede serparar en varios paquetes: 
   - `mingw-w64-crt` `mingw-w64-headers` `mingw-w64-gcc`
   - `mingw-w64-binutils` (para `llvm-windres`)
-- `libx11`, `libxmu`, `libxi`, `libgl` (Normalmente con `-dev` en Ubuntu, el nombre puede variar)
+- `libx11`, `libxmu`, `libxi`, `libgl` (Normalmente con `-dev` en Ubuntu, el nombre puede variar).
+- `ninja` (opcional) para compilaciones más rápidas.
 - OpenGL
 - Python para la descarga de dependencias y generación de scripts.
 
@@ -27,7 +28,7 @@ Esta plantilla está preparada para descargar y enlazar **estáticamente** las s
 
 2. `python install-deps.py` para descargar las dependencias a `deps/`.
 
-3. `python build-scripts.py` para generar los scripts de compilación de cmake.
+3. `python build-scripts.py` para generar los scripts de compilación de cmake. Puedes añadir `--ninja` para usar `ninja` en lugar de `make`.
 
 4. `cmake --build build/<target>` para compilar a la arquitectura + OS seleccionado (ej.: x86_64-linux).
 
