@@ -1,13 +1,23 @@
 import os
 from argparse import ArgumentParser
+from shutil import rmtree
 
 parser = ArgumentParser()
 parser.add_argument(
-    "--ninja", required=False, action="store_true",
+    "--ninja", action="store_true",
     help="Set it if you want to use ninja as the build system. Only needs to be done once."
+)
+parser.add_argument(
+    "-f", "--force", action="store_true",
+    help="Remove build directory before generating the build scripts."
 )
 args = parser.parse_args()
 
+if args.force:
+    try:
+        rmtree(os.path.join(os.path.dirname(__file__), "build"))
+    except FileNotFoundError as e:
+        pass
 
 # cmake -B build/windows -S . -DCMAKE_TOOLCHAIN_FILE=toolchains/x86_64-windows.cmake
 toolchains = os.listdir("toolchains")
