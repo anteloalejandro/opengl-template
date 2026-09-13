@@ -1,7 +1,5 @@
 from io import BytesIO
 from os import path
-import os
-import subprocess
 from typing import cast
 import urllib.request as request
 from http.client import HTTPResponse

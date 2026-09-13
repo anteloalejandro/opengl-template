@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
+set(PROJECT_NAME main)
 # project(<project_name> <language>)
-project(main C)
+project(${PROJECT_NAME} C)
 
-add_executable(main
+add_executable(${PROJECT_NAME}
     src/main.c
 )
 
@@ -12,18 +13,20 @@ set(TARGET_PLATFORM "${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 set(PREBUILT_LIB_DIR "${CMAKE_SOURCE_DIR}/lib/${TARGET_PLATFORM}")
 set(CMAKE "${CMAKE_SOURCE_DIR}/lib/${TARGET_PLATFORM}")
 
-target_include_directories(main PRIVATE
+# Equivalent of -I in clang/gcc
+target_include_directories(${PROJECT_NAME} PRIVATE
     deps/freeglut/include
     deps/glew/include
 )
-target_link_libraries(main PRIVATE
+target_link_libraries(${PROJECT_NAME} PRIVATE
     # got the name from add_library inside freeglut/CMakeLists.txt
     freeglut_static
+    # got the name from the GLEW documentation
     glew_s
 )
 
 # Set output directory for the final executable
-set_target_properties(main PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${TARGET_PLATFORM}"
 )
 

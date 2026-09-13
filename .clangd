@@ -1,3 +1,2 @@
 CompileFlags:
-  Add: [-I./deps/freeglut/include/]
-  Add: [-I./deps/glew/include/]
+  Add: [-I./deps/freeglut/include/, -I./deps/glew/include/]
