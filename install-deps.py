@@ -10,6 +10,7 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 parser.add_argument("--glut_version", default="3.8.0")
 parser.add_argument("--glew_version", default="2.3.1")
+parser.add_argument("--glui_version", default="2.37")
 parser.add_argument(
     "-f", "--force", action="store_true",
     help="Remove deps directory before downloading the dependencies."
@@ -24,12 +25,13 @@ if args.force:
 
 GLUT_VERSION = args.glut_version
 GLEW_VERSION = args.glew_version
+GLUI_VERSION = args.glui_version
 
 class DownloadError(Exception): pass
 
-def get_zip(download_url: str):
+def get_zip(download_url: str, error: DownloadError):
     with cast(HTTPResponse, request.urlopen(download_url)) as response:
-        if response.getcode() != 200: raise DownloadError("freeglut", GLUT_VERSION)
+        if response.getcode() != 200: raise error
         data = response.read()
 
     return ZipFile(BytesIO(data))
@@ -45,14 +47,21 @@ def download_glut():
     download_path = path.join("deps", "freeglut")
     if (path.exists(download_path)): return
     download_url = f"https://github.com/freeglut/freeglut/archive/refs/tags/v{GLUT_VERSION}.zip"
-    zip = get_zip(download_url)
+    zip = get_zip(download_url, DownloadError("freeglut", GLUT_VERSION))
     unzip_top_folder(zip, download_path)
 
 def download_glew():
     download_path = path.join("deps", "glew")
     if (path.exists(download_path)): return
     download_url = f"https://github.com/nigels-com/glew/releases/download/glew-{GLEW_VERSION}/glew-{GLEW_VERSION}.zip"
-    zip = get_zip(download_url)
+    zip = get_zip(download_url, DownloadError("glew", GLEW_VERSION))
+    unzip_top_folder(zip, download_path)
+
+def download_glui():
+    download_path = path.join("deps", "glui")
+    if (path.exists(download_path)): return
+    download_url = f"https://github.com/libglui/glui/archive/refs/tags/{GLUI_VERSION}.zip"
+    zip = get_zip(download_url, DownloadError("glui", GLUT_VERSION))
     unzip_top_folder(zip, download_path)
 
 try:
@@ -62,6 +71,10 @@ try:
 
     print("Downloading GLEW... ", end = "")
     download_glew()
+    print("Done.")
+
+    print("Downloading GLUI... ", end = "")
+    download_glui()
     print("Done.")
 
 except DownloadError as e:
