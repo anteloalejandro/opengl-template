@@ -12,15 +12,20 @@ Esta plantilla está preparada para descargar y enlazar **estáticamente** las s
 
 - `cmake >= 3.16`
 - `clang` + `llvm`
-- `base-devel` (arch) / `build-essential` (ubuntu)
 - `mingw-w64` + `llvm-windres`  para compilar a Windows desde Linux.
   - Según la distribución de Linux, se puede serparar en varios paquetes: 
   - `mingw-w64-crt` `mingw-w64-headers` `mingw-w64-gcc`
   - `mingw-w64-binutils` (para `llvm-windres`)
-- `libx11`, `libxmu`, `libxi`, `libgl` (Normalmente con `-dev` en Ubuntu, el nombre puede variar).
+- `libx11`, `libxmu`, `libxi`, `libgl`, `libxrandr` (Normalmente con `-dev` en Ubuntu, el nombre puede variar).
 - `ninja` (opcional) para compilaciones más rápidas.
 - OpenGL
 - Python para la descarga de dependencias y generación de scripts.
+
+**Archlinux**
+
+```bash
+sudo pacman -S clang cmake ninja llvm mingw-w64 libx11 libxmu libxi libgl 
+```
 
 ## Uso
 
