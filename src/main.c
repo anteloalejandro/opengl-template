@@ -1,5 +1,7 @@
-#include <GL/gl.h>
+#include <GL/glew.h>
 #include <GL/freeglut.h>
+#include <GL/gl.h>
+#include <FreeImage.h>
 
 void init(void) {
    glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -17,6 +19,8 @@ void display(void) {
 
 // Draw blue square on black background
 int main (int argc, char **argv) {
+   glewInit();
+   FreeImage_Initialise(0);
    glutInit(&argc, argv);
    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
    glutInitWindowSize(250, 250);

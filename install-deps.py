@@ -10,6 +10,7 @@ from argparse import ArgumentParser
 parser = ArgumentParser()
 parser.add_argument("--glut_version", default="3.8.0")
 parser.add_argument("--glew_version", default="2.3.1")
+parser.add_argument("--freeimage_version", default="3.19.18")
 parser.add_argument(
     "-f", "--force", action="store_true",
     help="Remove deps directory before downloading the dependencies."
@@ -22,8 +23,9 @@ if args.force:
     except FileNotFoundError as e:
         pass
 
-GLUT_VERSION = args.glut_version
-GLEW_VERSION = args.glew_version
+GLUT_VERSION: str = args.glut_version
+GLEW_VERSION: str = args.glew_version
+FREEIMAGE_VERSION: str = args.freeimage_version
 
 class DownloadError(Exception): pass
 
@@ -55,13 +57,25 @@ def download_glew():
     zip = get_zip(download_url)
     unzip_top_folder(zip, download_path)
 
+def download_freeimage():
+    download_path = path.join("deps", "freeimage")
+    if (path.exists(download_path)): return
+    # Usamos un fork de github
+    download_url = f"https://github.com/danoli3/FreeImage/archive/refs/tags/{FREEIMAGE_VERSION}.zip"
+    zip = get_zip(download_url)
+    unzip_top_folder(zip, download_path)
+
 try:
-    print("Downloading GLUT... ", end = "")
+    print("Downloading GLUT... ", end = "", flush=True)
     download_glut()
     print("Done.")
 
-    print("Downloading GLEW... ", end = "")
+    print("Downloading GLEW... ", end = "", flush=True)
     download_glew()
+    print("Done.")
+
+    print("Downloading FreeImage... ", end = "", flush=True)
+    download_freeimage()
     print("Done.")
 
 except DownloadError as e:

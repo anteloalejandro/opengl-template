@@ -30,12 +30,14 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     deps/glew/include
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE
+    stdc++ pthread
     # got the name from add_library inside freeglut/CMakeLists.txt
     freeglut_static
     # got the name from the GLEW documentation
     glew_s
+    # from freeimage's README
+    FreeImage
 )
-
 # Set output directory for the final executable
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${TARGET_PLATFORM}"
@@ -69,5 +71,25 @@ if(TARGET glew_s)
     set_target_properties(glew_s PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY "${PREBUILT_LIB_DIR}"
         OUTPUT_NAME "glew"
+    )
+endif()
+
+# ====== FreeImage CONFIG ======
+
+# El linker lld para MinGW no encuentra pthread si no se le añade
+if(MINGW)
+    add_link_options("LINKER:-lpthread")
+    target_link_options(main PRIVATE -static)
+endif()
+
+set(FREEIMAGE_STATIC ON CACHE BOOL "Build static FreeImage" FORCE)
+
+add_subdirectory(deps/freeimage)
+
+
+if(TARGET FreeImage)
+    set_target_properties(FreeImage PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${PREBUILT_LIB_DIR}"
+        OUTPUT_NAME "freeimage"
     )
 endif()
