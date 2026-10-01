@@ -3,10 +3,11 @@
 #include <GL/gl.h>
 #include <GL/glui.h>
 #include <FreeImage.h>
+#include "codebase.h"
 
 void init(void) {
    glClearColor(0.0, 0.0, 0.0, 0.0);
-   glColor3f(0.0, 0.0, 1.0);
+   glColor3fv(cb::AZUL);
    glMatrixMode(GL_PROJECTION);   
    glLoadIdentity();
    glOrtho(-10.0, 10.0, -10.0, 10.0, -10.0, 10.0);

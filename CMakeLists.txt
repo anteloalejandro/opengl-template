@@ -95,12 +95,17 @@ endif()
 
 # Equivalent of -I in clang/gcc
 target_include_directories(${PROJECT_NAME} PRIVATE
+    include
     deps/freeglut/include
     deps/glew/include
     deps/glui/include
 )
 
+find_package(OpenGL REQUIRED)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
+    OpenGL::GL
+    OpenGL::GLU
     pthread
     # got the name from add_library inside freeglut/CMakeLists.txt
     freeglut_static
