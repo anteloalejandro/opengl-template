@@ -1,7 +1,21 @@
 cmake_minimum_required(VERSION 3.16)
 set(PROJECT_NAME main)
 # project(<project_name> <language>)
-project(${PROJECT_NAME} C)
+project(${PROJECT_NAME} C CXX)
+
+# Determine whether to use main.cpp or main.c
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
+    set(MAIN_SRC src/main.cpp)
+elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/main.c")
+    set(MAIN_SRC src/main.c)
+else()
+    message(FATAL_ERROR "Neither src/main.cpp nor src/main.c was found!")
+endif()
+
+# Pass the resolved source file to your target
+add_executable(${PROJECT_NAME}
+    ${MAIN_SRC}
+)
 
 # Create a `compile_commands.json` the LSP can read
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -14,42 +28,20 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
   )
 endif()
 
-add_executable(${PROJECT_NAME}
-    src/main.c
-)
-
 # Set TARGET_PLATFORM variable
 set(TARGET_PLATFORM "${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 # Set output directory to lib/TARGET_PLATFORM.
 set(PREBUILT_LIB_DIR "${CMAKE_SOURCE_DIR}/lib/${TARGET_PLATFORM}")
 set(CMAKE "${CMAKE_SOURCE_DIR}/lib/${TARGET_PLATFORM}")
 
-# Equivalent of -I in clang/gcc
-target_include_directories(${PROJECT_NAME} PRIVATE
-    deps/freeglut/include
-    deps/glew/include
-)
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    stdc++ pthread
-    # got the name from add_library inside freeglut/CMakeLists.txt
-    freeglut_static
-    # got the name from the GLEW documentation
-    glew_s
-    # from freeimage's README
-    FreeImage
-)
-# Set output directory for the final executable
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${TARGET_PLATFORM}"
-)
 
 # ====== FREEGLUT CONFIG ======
-
-add_subdirectory(deps/freeglut)
 
 # Modify FREEGLUT CMake flags
 set(FREEGLUT_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(FREEGLUT_BUILD_DEMOS OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(deps/freeglut)
 
 # Overwrite FREEGLUT output directory and name
 if(TARGET freeglut_static)
@@ -76,13 +68,13 @@ endif()
 
 # ====== FreeImage CONFIG ======
 
-# El linker lld para MinGW no encuentra pthread si no se le añade
-if(MINGW)
+if(MINGW OR WIN32)
+    # El linker lld para MinGW no encuentra pthread si no se le añade
     add_link_options("LINKER:-lpthread")
-    target_link_options(main PRIVATE -static)
+    target_link_options(${PROJECT_NAME} PRIVATE -static)
 endif()
 
-set(FREEIMAGE_STATIC ON CACHE BOOL "Build static FreeImage" FORCE)
+set(FREEIMAGE_STATIC ON CACHE BOOL "" FORCE)
 
 add_subdirectory(deps/freeimage)
 
@@ -93,3 +85,26 @@ if(TARGET FreeImage)
         OUTPUT_NAME "freeimage"
     )
 endif()
+
+# ====== TARGET DEF ======
+
+# Equivalent of -I in clang/gcc
+target_include_directories(${PROJECT_NAME} PRIVATE
+    deps/freeglut/include
+    deps/glew/include
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    pthread
+    # got the name from add_library inside freeglut/CMakeLists.txt
+    freeglut_static
+    # got the name from the GLEW documentation
+    glew_s
+    # from freeimage's README
+    FreeImage
+)
+
+# Set output directory for the final executable
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${TARGET_PLATFORM}"
+)
