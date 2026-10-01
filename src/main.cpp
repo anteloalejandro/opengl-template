@@ -21,6 +21,7 @@ void display(void) {
 // Draw blue square on black background
 int main (int argc, char **argv) {
    glewInit();
+   glui_idle_func();
    FreeImage_Initialise(0);
    glutInit(&argc, argv);
    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);

@@ -3,21 +3,8 @@ set(PROJECT_NAME main)
 # project(<project_name> <language>)
 project(${PROJECT_NAME} C CXX)
 
-# Determine whether to use main.cpp or main.c
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
-    set(MAIN_SRC src/main.cpp)
-elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/main.c")
-    set(MAIN_SRC src/main.c)
-else()
-    message(FATAL_ERROR "Neither src/main.cpp nor src/main.c was found!")
-endif()
-
-# Pass the resolved source file to your target
-add_executable(${PROJECT_NAME}
-    ${MAIN_SRC}
-)
-
 # Create a `compile_commands.json` the LSP can read
+# Must be set before add_executable to work properly
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Link it from the build directory of the target to build/ directly
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
@@ -27,6 +14,10 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS)
     SYMBOLIC
   )
 endif()
+
+add_executable(${PROJECT_NAME}
+    src/main.cpp
+)
 
 # Set TARGET_PLATFORM variable
 set(TARGET_PLATFORM "${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
