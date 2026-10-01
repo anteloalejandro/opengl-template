@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <GL/gl.h>
+#include <GL/glui.h>
 #include <FreeImage.h>
 
 void init(void) {

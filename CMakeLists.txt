@@ -34,7 +34,6 @@ set(TARGET_PLATFORM "${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 set(PREBUILT_LIB_DIR "${CMAKE_SOURCE_DIR}/lib/${TARGET_PLATFORM}")
 set(CMAKE "${CMAKE_SOURCE_DIR}/lib/${TARGET_PLATFORM}")
 
-
 # ====== FREEGLUT CONFIG ======
 
 # Modify FREEGLUT CMake flags
@@ -86,12 +85,28 @@ if(TARGET FreeImage)
     )
 endif()
 
+# ====== GLUI CONFIG ======
+
+add_subdirectory(
+    # Custom CMakeLists.txt instead of deps/glui/CMakeLists.txt
+    "${CMAKE_SOURCE_DIR}/cmake/glui"
+    "${CMAKE_BINARY_DIR}/deps/glui"
+)
+
+if(TARGET glui_static)
+    set_target_properties(glui_static PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${PREBUILT_LIB_DIR}"
+        OUTPUT_NAME "glui"
+    )
+endif()
+
 # ====== TARGET DEF ======
 
 # Equivalent of -I in clang/gcc
 target_include_directories(${PROJECT_NAME} PRIVATE
     deps/freeglut/include
     deps/glew/include
+    deps/glui/include
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -102,6 +117,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     glew_s
     # from freeimage's README
     FreeImage
+    # from glui's add_library
+    glui_static
 )
 
 # Set output directory for the final executable
