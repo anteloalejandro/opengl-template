@@ -44,7 +44,7 @@ void reshape(int width, int height) {
 
 }
 
-// Draw blue square on black background
+// Draw white square on black background
 int main (int argc, char **argv) {
    // Window settings
    glutInit(&argc, argv);
