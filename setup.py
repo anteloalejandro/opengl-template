@@ -107,12 +107,12 @@ def run(args):
     os.system(f"cmake --build build/{arch_target} && {'wine' if is_windows else ''} ./bin/{target_arch}/{executable}")
 
 parser = ArgumentParser()
+# TODO: Make this less... crappy
+parser.set_defaults(func=lambda _: os.system("python setup.py deps && python setup.py build_scripts && python setup.py run"))
+
 subparsers = parser.add_subparsers(dest="command")
 
 deps_parser = subparsers.add_parser("deps")
-build_scripts_parser = subparsers.add_parser("build_scripts")
-run_parser = subparsers.add_parser("run")
-
 deps_parser.add_argument("--glut_version", default="3.8.0")
 deps_parser.add_argument("--glew_version", default="2.3.1")
 deps_parser.add_argument("--freeimage_version", default="3.19.18")
@@ -123,6 +123,7 @@ deps_parser.add_argument(
 )
 deps_parser.set_defaults(func=deps)
 
+build_scripts_parser = subparsers.add_parser("build_scripts")
 build_scripts_parser.add_argument(
     "--ninja", action="store_true",
     help="Set it if you want to use ninja as the build system. Only needs to be done once."
@@ -137,6 +138,7 @@ build_scripts_parser.add_argument(
 )
 build_scripts_parser.set_defaults(func=build_scripts)
 
+run_parser = subparsers.add_parser("run")
 run_parser.add_argument(
     "-t", "--target", default="linux",
 )
