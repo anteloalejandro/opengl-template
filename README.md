@@ -31,11 +31,11 @@ sudo pacman -S clang cmake ninja llvm mingw-w64 libx11 libxmu libxi libgl
 
 1. Clonar y moverse al repositorio
 
-2. `python install-deps.py` para descargar las dependencias a `deps/`.
+2. `python setup.py deps` para descargar las dependencias a `deps/`.
 
-3. `python build-scripts.py` para generar los scripts de compilación de cmake. Puedes añadir `--ninja` para usar `ninja` en lugar de `make`. Puedes ejecutarlo en cualquier momento con la opción `--release` para activar las optimizaciones, o sin la opción para desactivarlas.
+3. `python setup.py build_scripts` para generar los scripts de compilación de cmake. Puedes añadir `--ninja` para usar `ninja` en lugar de `make`. Puedes ejecutarlo en cualquier momento con la opción `--release` para activar las optimizaciones, o sin la opción para desactivarlas.
 
-4. `cmake --build build/<target>` para compilar a la arquitectura + OS seleccionado (ej.: x86_64-linux).
+4. `python setup.py run -t <os> -a <arch>` para compilar a la arquitectura + OS seleccionado (por defecto, `linux` y `x86_64`).
 
 5. `./bin/<target>/main` para ejecutar el binario.
 
