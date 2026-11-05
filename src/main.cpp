@@ -21,9 +21,9 @@
 // Create a new Display List with glGenLists(1)
 #define GL_LIST(varname, ...) GL_LISTS(varname, 1, __VA_ARGS__)
 // Enapsulate attributes
-#define GL_ATTRIB(...) glPushAttrib(GL_ALL_ATTRIB_BITS) { __VA_ARGS__; } glPopAttrib();
+#define GL_ATTRIB(...) glPushAttrib(GL_ALL_ATTRIB_BITS); { __VA_ARGS__; } glPopAttrib();
 // Encapsulate matrix transformations
-#define GL_MATRIX(...) glPushMatrix() { __VA_ARGS__; } glPopMatrix();
+#define GL_MATRIX(...) glPushMatrix(); { __VA_ARGS__; } glPopMatrix();
 // Encapsulate attributes and matrix transformations
 #define GL_GUARD(...) GL_ATTRIB(GL_MATRIX(__VA_ARGS__));
 
